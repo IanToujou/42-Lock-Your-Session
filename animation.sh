@@ -17,8 +17,8 @@ display_frame(){
 	sleep 0.06
 }
 
-poop_animation=$(cat movie_name)
-cd $poop_animation/
+animation=$(cat movie_name)
+cd $animation/
 
 frames=$(cat frameList)
 
