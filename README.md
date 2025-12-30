@@ -1,6 +1,7 @@
 # 42 Lock Your Session
 
 [![Release](https://img.shields.io/badge/-Release_1.0.0-blue?logo=github)](https://github.com/IanToujou/42-Lock-Your-Session/releases)
+[![Downloads](https://img.shields.io/github/downloads/IanToujou/42-Lock-Your-Session/total?color=02C749&label=Downloads&labelColor=02C749)](https://github.com/IanToujou/42-Lock-Your-Session/releases)
 [![Support](https://img.shields.io/badge/-Support-teal?logo=github)](https://github.com/IanToujou)
 
 42 Lock Your Session is a small tool to make students at 42, especially pisciners, lock their session.
