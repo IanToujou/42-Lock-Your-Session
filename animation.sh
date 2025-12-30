@@ -3,14 +3,35 @@
 display_frame() {
   local text=("$@")
   local rows=${#text[@]}
-  local cols=${#text[0]}
-  local start_row=$(( ( $(tput lines) - rows ) / 2 ))
-  local start_col=$(( ( $(tput cols) - cols) / 2))
+  local terminal_rows=$(tput lines)
+  local terminal_cols=$(tput cols)
+
+  local max_cols=0
+  for line in "${text[@]}"; do
+    local line_len=${#line}
+    if [ $line_len -gt $max_cols ]; then
+      max_cols=$line_len
+    fi
+  done
+
+  local start_row=$(( ( terminal_rows - rows ) / 2 ))
+  local start_col=$(( ( terminal_cols - max_cols ) / 2 ))
+
+  if [ $start_row -lt 0 ]; then
+    start_row=0
+  fi
+  if [ $start_col -lt 0 ]; then
+    start_col=0
+  fi
+
   clear
 
   for (( i=0; i<rows; i++)); do
-    tput cup $(( start_row + i )) $start_col
-    echo -e "${text[$i]}"
+    local row_pos=$(( start_row + i ))
+    if [ $row_pos -lt $terminal_rows ]; then
+      tput cup "$row_pos" "$start_col"
+      echo -e "${text[$i]}"
+    fi
   done
   sleep 0.06
 }
