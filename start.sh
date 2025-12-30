@@ -1,5 +1,13 @@
 #! /bin/bash
 
+stop_image_script() {
+    if [ ! -z "$IMAGE_PID" ]; then
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - Stopping image.py (PID: $IMAGE_PID)"
+        kill "$IMAGE_PID" 2>/dev/null
+        IMAGE_PID=""
+    fi
+}
+
 display_frame() {
   local text=("$@")
   local rows=${#text[@]}
@@ -69,7 +77,23 @@ case "$subcommand" in
     run_animation "$animation_name"
     ;;
   lock)
-    python script/image.py
+    LAST_STATE="unlocked"
+    while true; do
+      LOCK_COUNT=$(pgrep -c ft_lock)
+        if [ "$LOCK_COUNT" -ge 2 ]; then
+            if [ "$LAST_STATE" = "unlocked" ]; then
+                LAST_STATE="locked"
+                ./script/display_image.py &
+                IMAGE_PID=$!
+            fi
+        else
+            if [ "$LAST_STATE" = "locked" ]; then
+                stop_image_script
+                LAST_STATE="unlocked"
+            fi
+            sleep 0.5
+        fi
+    done
     ;;
   *)
     echo "Usage: $0 {animation|lock} [name]"
