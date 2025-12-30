@@ -45,7 +45,7 @@ run_animation() {
     exit 1
   fi
 
-  cd "$animation_name/" || exit 1
+  cd "animation/$animation_name/" || exit 1
   tput civis
 
   frames=$(cat frameList)
