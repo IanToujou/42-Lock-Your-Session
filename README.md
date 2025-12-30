@@ -23,7 +23,7 @@
 
 Note that the image will only display **after** locking the screen.
 
-You can also use `CTRL` `+` or `CTRL` `-` to adjust the size of your terminal, if necessary. You can use the `F11` key to enter and exit **fulscreen** mode in the terminal.
+You can also use `CTRL` `+` or `CTRL` `-` to adjust the size of your terminal, if necessary. You can use the `F11` key to enter and exit **fullscreen** mode in the terminal.
 
 ## Support
 
