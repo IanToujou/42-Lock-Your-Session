@@ -1,36 +1,61 @@
 #! /bin/bash
 
-tput civis
+display_frame() {
+  local text=("$@")
+  local rows=${#text[@]}
+  local cols=${#text[0]}
+  local start_row=$(( ( $(tput lines) - rows ) / 2 ))
+  local start_col=$(( ( $(tput cols) - cols) / 2))
+  clear
 
-display_frame(){
-	local text=("$@")
-	local rows=${#text[@]}
-	local cols=${#text[0]}
-	local start_row=$(( ( $(tput lines) - rows ) / 2 ))
-	local start_col=$(( ( $(tput cols) - cols) / 2))
-	clear
-
-	for (( i=0; i<rows; i++)); do
-		tput cup $(( start_row + i )) $start_col
-		echo -e "${text[$i]}"
-	done
-	sleep 0.06
+  for (( i=0; i<rows; i++)); do
+    tput cup $(( start_row + i )) $start_col
+    echo -e "${text[$i]}"
+  done
+  sleep 0.06
 }
 
-animation=$(cat movie_name)
-cd $animation/
+run_animation() {
+  local animation_name="$1"
 
-frames=$(cat frameList)
+  if [ -z "$animation_name" ]; then
+    echo "Error: animation name is required"
+    echo "Usage: $0 animation <name>"
+    exit 1
+  fi
 
-while true; do
+  cd "$animation_name/" || exit 1
+  tput civis
 
-	for frame in $frames; do
-		frameText=()
-		while IFS= read -r line; do
-			frameText+=("$line")
-		done < "$frame"
+  frames=$(cat frameList)
 
-		display_frame "${frameText[@]}"
-	done
-done
+  while true; do
+    for frame in $frames; do
+      frameText=()
+      while IFS= read -r line; do
+        frameText+=("$line")
+      done < "$frame"
+      display_frame "${frameText[@]}"
+    done
+  done
+}
+
+subcommand="$1"
+
+case "$subcommand" in
+  animation)
+    animation_name="$2"
+    run_animation "$animation_name"
+    ;;
+  lock)
+    python script/image.py
+    ;;
+  *)
+    echo "Usage: $0 {animation|lock} [name]"
+    echo "  animation <name>  - Run animation (name required)"
+    echo "  lock              - Execute lock script"
+    exit 1
+    ;;
+esac
+
 tput cnorm
